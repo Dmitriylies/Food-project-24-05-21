@@ -40,17 +40,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     //Timer
-    const time = '2021-06-01';
+    const time = '2021-06-05';
 
     function getDateRemainding(endtime) {
-        const RemaindDate = Date.parse(endtime) - Date.parse(new Date());
-        const days = Math.floor(RemaindDate / (1000 * 60 * 60 * 24)),
-              hours = Math.floor(RemaindDate / (1000 * 60 * 60)% 24),
-              minutes = Math.floor(RemaindDate / (1000 / 60 )% 60),
-              seconds = Math.floor((RemaindDate / 1000)% 60);
+        const remaindDate = Date.parse(endtime) - Date.parse(new Date());
+        const days = Math.floor(remaindDate / (1000 * 60 * 60 * 24)),
+              hours = Math.floor(remaindDate / (1000 * 60 * 60)% 24),
+              minutes = Math.floor(remaindDate / (1000 / 60 )% 60),
+              seconds = Math.floor((remaindDate / 1000)% 60);
 
         return {
-            'total': RemaindDate,
+            'total': remaindDate,
             'days': days,
             'hours': hours,
             'minutes': minutes,
@@ -74,8 +74,9 @@ document.addEventListener('DOMContentLoaded', () => {
             hours.innerHTML = t.hours;
             minutes.innerHTML = t.minutes;
             seconds.innerHTML = t.seconds;
-        
-            if (t.RemaindDate <= 0) {
+            console.log(t.total);
+            
+            if (t.total <= 0) {
             clearInterval(timeInterval);
             }
         }
@@ -127,4 +128,64 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.addEventListener('scroll', showModalByScroll);
+//карточки через классы
+    class CardCreator{
+        constructor(img, alt, title, descr, price, parent) {
+            
+            this.img = img;
+            this.alt = alt;
+            this.title = title;
+            this.descr = descr;
+            this.price = price;
+            this.parent = document.querySelector(parent);
+        }
+
+        render(){
+            const card = document.createElement('div');
+            card.innerHTML = `
+            <div class="menu__item">
+                    <img src=${this.img} alt=${this.alt}>
+                    <h3 class="menu__item-subtitle">${this.title}</h3>
+                    <div class="menu__item-descr">${this.descr}</div>
+                    <div class="menu__item-divider"></div>
+                    <div class="menu__item-price">
+                        <div class="menu__item-cost">Цена:</div>
+                        <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
+                    </div>
+                </div>
+            `;
+            this.parent.append(card);
+           //document.querySelector('.menu .container').append(card);-тоже самое
+        }
+    }
+
+    const newCard = new CardCreator(
+        '"img/tabs/vegy.jpg"',
+        '"vegy"',
+        'Меню "Фитнес"',
+        'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
+        229,
+        '.menu .container'
+    ).render();
+
+    const newCard1 = new CardCreator(
+        '"img/tabs/elite.jpg"',
+        '"elite"',
+        'Меню “Премиум”',
+        'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
+        550,
+        '.menu .container'
+    ).render();
+
+    const newCard2 = new CardCreator(
+        '"img/tabs/post.jpg"',
+        '"post"',
+        'Меню "Постное"',
+        'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
+        430,
+        '.menu .container'
+    ).render();
  });
+
+
+ 
