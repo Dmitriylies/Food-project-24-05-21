@@ -140,7 +140,6 @@ document.addEventListener('DOMContentLoaded', () => {
 //карточки через классы
     class CardCreator{
         constructor(img, alt, title, descr, price, parent, ...classes) {
-            
             this.img = img;
             this.alt = alt;
             this.title = title;
@@ -159,8 +158,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.classes.forEach(className => card.classList.add(className));
             }
 
-            
-
             card.innerHTML = `
                     <img src=${this.img} alt=${this.alt}>
                     <h3 class="menu__item-subtitle">${this.title}</h3>
@@ -176,52 +173,49 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    const newCard = new CardCreator(
-        '"img/tabs/vegy.jpg"',
-        '"vegy"',
-        'Меню "Фитнес"',
-        'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
-        229,
-        '.menu .container'
-    ).render();
+    const getResourse = async (url, data) => {
+        const res = await fetch(url);
 
-    const newCard1 = new CardCreator(
-        '"img/tabs/elite.jpg"',
-        '"elite"',
-        'Меню “Премиум”',
-        'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!',
-        550,
-        '.menu .container',
-        'menu__item',
-        'big'
-    ).render();
+        if (!res.ok) {
+            throw new Error(`Could not fetch ${url}, satatus: ${res.status}`);
+        }
 
-    const newCard2 = new CardCreator(
-        '"img/tabs/post.jpg"',
-        '"post"',
-        'Меню "Постное"',
-        'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
-        430,
-        '.menu .container',
-        'menu__item',
-        'big'
-    ).render();
+        return await res.json();
+    };
+
+    getResourse('http://localhost:3000/menu')
+        .then(data => {
+            data.forEach(({img, altimg, title, descr, price}) => {
+                new CardCreator(img, altimg, title, descr, price, '.menu .container').render();
+            });
+        });
+    
 
     //forms
 
     const forms = document.querySelectorAll('form');
-
     const message = {
-        loading: 'img/form/spinner.svg',
-        success: 'Спасибо, мы с вами скоро свяжемся!',
-        failure: 'Что-то пошло не так...'
+          loading: 'img/form/spinner.svg',
+          success: 'Спасибо, мы с вами скоро свяжемся!',
+          failure: 'Что-то пошло не так...'
     };
 
     forms.forEach(item => {
-        postData(item);
+        bindPostData(item);
     });
 
-    function postData(form) {
+    const postData = async (url, data) => {
+        const res = await fetch(url, {
+                method: "POST",
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: data
+        });
+        return await res.json();
+    };
+
+    function bindPostData(form) {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
@@ -241,24 +235,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 object[key] = value;
             });
 
-            fetch('serve1r.php', {
-                method: "POST",
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify(object)
-            })
-            .then(data => data.text()) // превратили ответ от сервера в текст
-            .then(data => {
-                console.log(data);
-                showThanksModal(message.success);
-                statusMessage.remove();
-            })
-            .catch(() => {
-                showThanksModal(message.failure);
-            })
-            .finally(() => {
-                form.reset();
+            const json = JSON.stringify(Object.fromEntries(formData.entries()));
+
+
+            postData('http://localhost:3000/requests', json)
+                .then(data => {
+                    console.log(data);
+                    showThanksModal(message.success);
+                    statusMessage.remove();
+                })
+                .catch(() => {
+                    showThanksModal(message.failure);
+                })
+                .finally(() => {
+                    form.reset();
             });
         });
     }
@@ -280,18 +270,11 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
 
         document.querySelector('.modal').append(thanksModal);
-        const w = setTimeout(() => {
+            setTimeout(() => {
             thanksModal.remove();
             prevModalDiaog.classList.add('show');
             prevModalDiaog.classList.remove('hide');
             closeModal();
         }, 4000);
     }
-
-
-    fetch('http://localhost:3000/menu') 
-    .then(data => data.json())
-    .then(res => console.log(res));
-
-
 });
