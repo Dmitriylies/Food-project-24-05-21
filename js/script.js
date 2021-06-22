@@ -290,87 +290,105 @@ document.addEventListener('DOMContentLoaded', () => {
           prev = document.querySelector('.offer__slider-prev'),
           next = document.querySelector('.offer__slider-next'),
           total = document.querySelector('#total'),
-          current = document.querySelector('#current');
+          current = document.querySelector('#current'),
+          slidesWrapper = document.querySelector('.offer__slider-wrapper'),
+          slidesField = document.querySelector('.offer__slider-inner'),
+          width = window.getComputedStyle(slidesWrapper).width;
      let sliderIndex = 1;
+     let offset = 0;
+//!4 инициализалия функции счеткчика, чтобы при запуске сразу коректно отрабатывал.
+     if (slides.length < 10) {
+         total.textContent = `0${slides.length}`;
+         current.textContent = `0${sliderIndex}`;
+     } else {
+         total.textContent = slides.length;
+         current.textContent = sliderIndex;
+     }
+//!1
+     slidesField.style.width = 100 * slides.length + '%';
 
-     showSlides(sliderIndex);
+     slidesField.style.display = 'flex';
+     slidesField.style.transition = '0.5s all';
 
-    if (slides.length < 10) {
-        total.textContent = `0${slides.length}`;
-    } else {
-        total.textContent = slides.length;
-    }
+     slidesWrapper.style.overflow = 'hidden';  
 
-     function showSlides(n) {
-        if (n > slides.length) {
-            sliderIndex = 1;
+     slides.forEach(slide => {
+         slide.style.width = width;
+     });
+//!2
+     next.addEventListener('click', ()=> {
+
+        if (offset == +width.slice(0, width.length - 2) * (slides.length - 1)) { //'500px'
+            offset = 0;
+        } else {
+            offset += +width.slice(0, width.length - 2);
         }
-        if (n < 1) {
+         slidesField.style.transform = `translateX(-${offset}px)`;
+//!</2>
+//!5
+         if (sliderIndex == slides.length) {
+             sliderIndex = 1;
+         } else {
+            sliderIndex++;
+         }
+
+         if (sliderIndex < 10) {
+             current.textContent = `0${sliderIndex}`;
+         } else {
+            current.textContent = sliderIndex;
+         }
+     });
+//!3
+     prev.addEventListener('click', ()=> {
+        if (offset == 0) { //'500px'
+            offset = +width.slice(0, width.length - 2) * (slides.length - 1);
+        } else {
+            offset -= +width.slice(0, width.length - 2);
+        }
+         slidesField.style.transform = `translateX(-${offset}px)`;
+//!<\3>
+         if (sliderIndex == 1) {
             sliderIndex = slides.length;
+        } else {
+           sliderIndex--;
         }
-        slides.forEach(item => item.style.display = 'none');
-        slides[sliderIndex - 1].style.display = 'block';
-
-        if (slides.length < 10) {
+        
+         if (sliderIndex < 10) {
             current.textContent = `0${sliderIndex}`;
         } else {
-            current.textContent = sliderIndex;
+           sliderIndex.textContent = sliderIndex;
         }
-     }
+     });
+    //  showSlides(sliderIndex);
+    // if (slides.length < 10) {
+    //     total.textContent = `0${slides.length}`;
+    // } else {
+    //     total.textContent = slides.length;
+    // }
+    //  function showSlides(n) {
+    //     if (n > slides.length) {
+    //         sliderIndex = 1;
+    //     }
+    //     if (n < 1) {
+    //         sliderIndex = slides.length;
+    //     }
+    //     slides.forEach(item => item.style.display = 'none');
+    //     slides[sliderIndex - 1].style.display = 'block';
+    //     if (slides.length < 10) {
+    //         current.textContent = `0${sliderIndex}`;
+    //     } else {
+    //         current.textContent = sliderIndex;
+    //     }
+    //  }
+    // function plusSlides(n) {
+    //    showSlides(sliderIndex += n);
+    // }
 
-    function plusSlides(n) {
-       showSlides(sliderIndex += n);
-    }
+    // prev.addEventListener('click', ()=> {
+    //     plusSlides(-1);   
 
-    prev.addEventListener('click', ()=> {
-        plusSlides(-1);   
-
-    });
-    next.addEventListener('click', ()=> {
-        plusSlides(1);
-    });
-
-//      if (sliderIndex < 10){
-//         total.textContent = `0${slides.length}`;
-//      } else {
-//         total.textContent = slides.length;
-//      }
-    
-
-//      showSlides(sliderIndex);
-
-//     function showSlides(n) {
-//         if (n < 1){
-//             sliderIndex = slides.length;
-//         } 
-//         if (n > slides.length) {
-//             sliderIndex = 1;
-//         }
-
-//         slides.forEach(item => item.style.display = 'none');
-//         slides[sliderIndex - 1].style.display = 'block';
-
-//         if (sliderIndex < 10){
-//             current.textContent = `0${sliderIndex}`;
-//          } else {
-//             current.textContent = sliderIndex;
-//          }
-//     }
-    
-//     function plusSlider
-    
-//     prev.addEventListener('click', ()=> {
-//         const a = sliderIndex += -1;
-//         showSlides(a);
-//         console.log(a);
-        
-//     });
-
-//     next.addEventListener('click', ()=> {
-//         const b = sliderIndex += +1;
-//         showSlides(b);
-//         console.log(b);
-        
-//     });
-
+    // });
+    // next.addEventListener('click', ()=> {
+    //     plusSlides(1);
+    // });
 });
