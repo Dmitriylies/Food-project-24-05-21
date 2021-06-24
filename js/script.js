@@ -246,7 +246,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             postData('http://localhost:3000/requests', json)
                 .then(data => {
-                    console.log(data);
                     showThanksModal(message.success);
                     statusMessage.remove();
                 })
@@ -326,13 +325,18 @@ document.addEventListener('DOMContentLoaded', () => {
      slides.forEach(slide => {
          slide.style.width = width;
      });
-//!2
+//! new one
+function StringtoNum(string) {
+    const num = +string.replace(/\D/g, '');
+    return num;
+ }
+ //!2
      next.addEventListener('click', ()=> {
 
-        if (offset == +width.slice(0, width.length - 2) * (slides.length - 1)) { //'500px'
+        if (offset == StringtoNum(width) * (slides.length - 1)) { //'500px'
             offset = 0;
         } else {
-            offset += +width.slice(0, width.length - 2);
+            offset += StringtoNum(width);
         }
         sliderTranslate();
 //!</2>
@@ -349,9 +353,9 @@ document.addEventListener('DOMContentLoaded', () => {
 //!3
      prev.addEventListener('click', ()=> {
         if (offset == 0) { //'500px'
-            offset = +width.slice(0, width.length - 2) * (slides.length - 1);
+            offset = StringtoNum(width) * (slides.length - 1);
         } else {
-            offset -= +width.slice(0, width.length - 2);
+            offset -= StringtoNum(width);
         }
         sliderTranslate();
 //!<\3>
@@ -365,7 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
         counterZero();
         indicatorsLight();
      });
-//dots
+//dots + обвернуты некоторые операции в функции.
      const dots = document.querySelector('.offer__slider');
      const dotsContainer = document.createElement('ol');  
      const indicators = [];
@@ -390,27 +394,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         indicators.push(dot);
      }
-     console.log(indicators);
      
      indicators.forEach(dot => {
         dot.addEventListener('click', (e)=> {
             const slideTo = e.target.getAttribute('data-slide-to');
             sliderIndex = slideTo;
-            console.log(slideTo);
             
-            offset = +width.slice(0, width.length - 2) * (slideTo - 1);
-            console.log(`offset ${offset}`);
+            offset = StringtoNum(width) * (slideTo - 1);
             
             sliderTranslate();
             counterZero();
             indicatorsLight();
         });
      });    
-/**
-  ** ! tgrtg 
-
- 
-*/
+     //*  версия кода из урока с прописаными стилями в js 
      // const slider = document.querySelector('.offer__slider');
 
 //      slider.style.position = 'relative';
