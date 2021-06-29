@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/Dmitriylies/Food-project-24-05-21#readme",
   "devDependencies": {
-    "json-server": "^0.16.3"
+    "json-server": "^0.16.3",
+    "webpack": "^5.41.1",
+    "webpack-cli": "^4.7.2"
   }
 }
