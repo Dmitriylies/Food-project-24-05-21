@@ -1,14 +1,15 @@
-function slider() {
+function slider({container, slide, nextArrow, prevArrow, totalCounter, currentCounter, wrapper, field }) {
      
     // слайдер 
 
-    const slides = document.querySelectorAll('.offer__slide'),
-          prev = document.querySelector('.offer__slider-prev'),
-          next = document.querySelector('.offer__slider-next'),
-          total = document.querySelector('#total'),
-          current = document.querySelector('#current'),
-          slidesWrapper = document.querySelector('.offer__slider-wrapper'),
-          slidesField = document.querySelector('.offer__slider-inner'),
+    const slides = document.querySelectorAll(slide),
+          slider = document.querySelector(container),
+          prev = document.querySelector(prevArrow),
+          next = document.querySelector(nextArrow),
+          total = document.querySelector(totalCounter),
+          current = document.querySelector(currentCounter),
+          slidesWrapper = document.querySelector(wrapper),
+          slidesField = document.querySelector(field),
           width = window.getComputedStyle(slidesWrapper).width;
      let sliderIndex = 1;
      let offset = 0;
@@ -86,9 +87,8 @@ function StringtoNum(string) {
         counterZero();
         indicatorsLight();
      });
-//dots + обвернуты некоторые операции в функции.
-     const dots = document.querySelector('.offer__slider');
-     const dotsContainer = document.createElement('ol');  
+//slider + обвернуты некоторые операции в функции.
+     const sliderContainer = document.createElement('ol');  
      const indicators = [];
 
      function indicatorsLight(){
@@ -96,15 +96,15 @@ function StringtoNum(string) {
         indicators[sliderIndex - 1].style.opacity = '1';
      }
 
-     dots.style.position = 'relative';
-     dotsContainer.classList.add('carousel-indicators');
-     dots.append(dotsContainer);
+     slider.style.position = 'relative';
+     sliderContainer.classList.add('carousel-indicators');
+     slider.append(sliderContainer);
      for(let i = 0; i < slides.length; i++) {
         const dot = document.createElement('li');
         dot.classList.add('dot');
         dot.setAttribute('data-slide-to', i + 1);
 
-        dotsContainer.append(dot);
+        sliderContainer.append(dot);
 
         if( i == 0) {
             dot.style.opacity = '1';
@@ -129,11 +129,11 @@ function StringtoNum(string) {
 
 //      slider.style.position = 'relative';
 
-//      const dots = document.createElement('ol'),
+//      const slider = document.createElement('ol'),
 //            indicators = [];
 
-//      dots.classList.add('carousel-indicators');
-//      dots.style.cssText = `
+//      slider.classList.add('carousel-indicators');
+//      slider.style.cssText = `
 //         position: absolute;
 //         right: 0;
 //         bottom: 0;
@@ -145,7 +145,7 @@ function StringtoNum(string) {
 //         margin-left: 15%;
 //         list-style: none;
 //      `;
-// slider.append(dots);
+// slider.append(slider);
 
 // for (let i = 0; i < slides.length; i++) {
 //     const dot = document.createElement('li');
@@ -168,7 +168,7 @@ function StringtoNum(string) {
 //     if (i == 0) {
 //         dot.style. opacity = '1';
 //     }
-//     dots.append(dot);
+//     slider.append(dot);
 //     indicators.push(dot);
 // }
 //     // работоспособность прописана в next и prev
@@ -191,4 +191,4 @@ function StringtoNum(string) {
 //         });
 //     });
 }
-module.exports = slider;
+export default  slider;

@@ -1,3 +1,5 @@
+
+import {getResourse} from '../services/services';
 function cards() {
     //карточки через классы
     class CardCreator{
@@ -35,28 +37,20 @@ function cards() {
         }
     }
 
-    const getResourse = async (url, data) => {
-        const res = await fetch(url);
+ 
 
-        if (!res.ok) {
-            throw new Error(`Could not fetch ${url}, satatus: ${res.status}`);
-        }
-
-        return await res.json();
-    };
-
-    // getResourse('http://localhost:3000/menu')
-    //     .then(data => {
-    //         data.forEach(({img, altimg, title, descr, price}) => {
-    //             new CardCreator(img, altimg, title, descr, price, '.menu .container').render();
-    //         });
-    //     });
-    axios.get('http://localhost:3000/menu')
+    getResourse('http://localhost:3000/menu')
         .then(data => {
-             data.data.forEach(({img, altimg, title, descr, price}) => {
-                 new CardCreator(img, altimg, title, descr, price, '.menu .container').render();
-             });
+            data.forEach(({img, altimg, title, descr, price}) => {
+                new CardCreator(img, altimg, title, descr, price, '.menu .container').render();
             });
+        });
+    // axios.get('http://localhost:3000/menu')
+    //     .then(data => {
+    //          data.data.forEach(({img, altimg, title, descr, price}) => {
+    //              new CardCreator(img, altimg, title, descr, price, '.menu .container').render();
+    //          });
+    //         });
 }
 
-module.exports = cards;
+export default  cards;
